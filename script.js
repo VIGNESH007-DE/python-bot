@@ -1,4 +1,4 @@
-const API_KEY = "AIzaSyA1Z5fpTyzYlkEDh6ZFOEhSJSasl0ga5Q0"; // Replace with your Gemini API key
+const API_KEY = "AIzaSyA1Z5fpTyzYlkEDh6ZFOEhSJSasl0ga5Q0"; // Replace with your valid API key
 
 async function fetchData() {
     const name = document.getElementById("query").value.trim();
@@ -7,12 +7,12 @@ async function fetchData() {
         return;
     }
 
-    const prompt = `Provide information about ${name}:
-    1. Suitable soil type  
-    2. Growth duration in days  
-    3. Best marketplaces to sell  
-    4. Common diseases and prevention  
-    5. Additional important details`;
+    const prompt = `Provide detailed information about the fruit or vegetable: ${name}
+    - Suitable soil type
+    - Growth duration in days
+    - Best marketplaces to sell
+    - Common diseases and prevention
+    - Any additional farming tips.`;
 
     try {
         const response = await fetch(
@@ -22,21 +22,28 @@ async function fetchData() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     prompt: prompt,
-                    max_tokens: 500  // Ensures enough response length
+                    temperature: 0.7,  // Adjusts response variety
+                    maxOutputTokens: 300  // Prevents truncation
                 })
             }
         );
 
+        // Check if response is OK
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
         const data = await response.json();
         console.log("API Response:", data); // Debugging
 
-        if (data && data.candidates && data.candidates.length > 0) {
-            document.getElementById("response").innerText = data.candidates[0].content; 
+        // Extract and display response
+        if (data && data.candidates && data.candidates[0] && data.candidates[0].output) {
+            document.getElementById("response").innerText = data.candidates[0].output;
         } else {
-            document.getElementById("response").innerText = "No data found. Try a different vegetable or fruit.";
+            document.getElementById("response").innerText = "No data found. Try another query.";
         }
     } catch (error) {
         console.error("Error:", error);
-        document.getElementById("response").innerText = "Error fetching data.";
+        document.getElementById("response").innerText = "Error fetching data. Check console.";
     }
 }
