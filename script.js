@@ -1,4 +1,4 @@
-const API_KEY = "AIzaSyA1Z5fpTyzYlkEDh6ZFOEhSJSasl0ga5Q0"; // Replace with your valid API key
+const API_KEY = "AIzaSyCym8GzDKVXwkdQ2xQQOBvsZ2HpTZNbp-Q"; // Replace with your valid API key
 
 async function fetchData() {
     const name = document.getElementById("query").value.trim();
